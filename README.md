@@ -51,10 +51,13 @@ the code already is, this is not a priority.
 # References
 
 [1] Stein, M. L. (2021).  A parametric model for distributions with flexible behavior in both tails. Environmetrics, 32(2):Paper No. e2658, 24. (https://onlinelibrary.wiley.com/doi/abs/10.1002/env.2658)
+
 [2] Krock, M., Bessac, J., Stein, M. L., and Monahan, A. H. Nonstationary seasonal model for daily mean temperature distribution bridging bulk and tails. (https://arxiv.org/pdf/2110.10046.pdf)
 
 # Authors
 Mitchell Krock <mk1867@stat.rutgers.edu> (active development)
+
 Julie Bessac <jbessac@anl.gov> (active development)
+
 Chris Geoga <christopher.geoga@rutgers.edu> (base implementation)
 
