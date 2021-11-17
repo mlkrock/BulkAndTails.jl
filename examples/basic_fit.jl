@@ -1,5 +1,5 @@
 
-using Distributions, BATsDistribution
+using Distributions, BulkAndTails
 
 # Some fake data, in this case a simple Cauchy distribution.
 const data = rand(TDist(1.0), 5_000) 
@@ -14,7 +14,7 @@ const data = rand(TDist(1.0), 5_000)
 # iterations or something. This isn't necessarily a problem with the model or
 # code. It's a hard optimization problem. We suggest trying again with different
 # initial values (an optional second arg here).
-const (mle, observed_information_matrix) = fit_mle(BATs, data, print_level=5)
+const (mle, observed_information_matrix) = fit_mle(BulkAndTailsDist, data, print_level=5)
 
 # A vague check for fit quality, which seems pretty good.
 for _x in (0.1, 1.0, 10.0, 100.0, 1000.0)

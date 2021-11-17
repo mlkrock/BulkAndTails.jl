@@ -1,10 +1,10 @@
-module BATsDistribution
+module BulkAndTails
 
   using Distributions, ForwardDiff, Ipopt, Roots, Random
-  export BATs, fitbats
+  export BulkAndTailsDist, fitbats
 
-  include("BATs_struct.jl")
-  include("BATs_functions.jl")
+  include("BulkAndTailsDist_struct.jl")
+  include("BulkAndTailsDist_functions.jl")
   include("fitting.jl")
   include("ipopt_interface.jl")
   

@@ -23,7 +23,7 @@
 # 0.0 > ϕ₀ - τ₀*iΨ(-1.0/κ₀) - minimum(data) **IF κ₀ < 0.0**
 function constr1(p, mindat)
   (κ₀, τ₀, ϕ₀, κ₁, τ₁, ϕ₁, ν) = p
-  κ₀ >= 0.0 && return -1.0 # If κ₀>0, return a very feasible number.
+  κ₀ ≥ 0.0 && return -1.0 # If κ₀>0, return a very feasible number.
   ϕ₀ - τ₀*iΨ(-1.0/κ₀) - mindat
 end
 
@@ -34,7 +34,7 @@ end
 # 0.0 < ϕ₁ + τ₁*iΨ(-1.0/κ₁) - maximum(data) **IF κ₁ < 0.0**
 function constr2(p, maxdat)
   (κ₀, τ₀, ϕ₀, κ₁, τ₁, ϕ₁, ν) = p
-  κ₁ >= 0.0 && return 1.0 # If κ₁>0, return a very feasible number.
+  κ₁ ≥ 0.0 && return 1.0 # If κ₁>0, return a very feasible number.
   ϕ₁ + τ₁*iΨ(-1.0/κ₁) - maxdat
 end
 
@@ -42,7 +42,7 @@ end
 @inline constr3(p) = p[1]/p[7]
 @inline constr4(p) = p[4]/p[7]
 
-function Distributions.fit_mle(::Type{BATs}, data::AbstractArray; 
+function Distributions.fit_mle(::Type{BulkAndTailsDist}, data::AbstractArray; 
                                init=[1.0, 1.0, 0.0, 1.0, 1.0, 0.0, 2.0], 
                                tol=1.0e-5, maxit=2000, print_level=0)
 
@@ -128,13 +128,13 @@ function Distributions.fit_mle(::Type{BATs}, data::AbstractArray;
   status = solveProblem(prob)
 
   # If a solution was found, return it. Otherwise throw an error. 
-  iszero(status) && return (BATs(prob.x), Matrix(hess(prob.x)))
+  iszero(status) && return (BulkAndTailsDist(prob.x), Matrix(hess(prob.x)))
   throw(error("Optimization failed with Ipopt return code $status."))
 end
 
 # for R users:
 function fitbats(data; kwargs...) 
-  (mle, hes) = fit_mle(BATs, data; kwargs...)
-  [getfield(mle, f) for f in fieldnames(BATs)], hes
+  (mle, hes) = fit_mle(BulkAndTailsDist, data; kwargs...)
+  [getfield(mle, f) for f in fieldnames(BulkAndTailsDist)], hes
 end
 

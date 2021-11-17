@@ -1,4 +1,4 @@
-name = "BATsDistribution"
+name = "BulkAndTails"
 uuid = "6bd37c0a-d4fd-4ef6-9e65-cd3b634e9aab"
 authors = ["Mitchell Krock <mk1867@stat.rutgers.edu>"]
 version = "0.1.0"
