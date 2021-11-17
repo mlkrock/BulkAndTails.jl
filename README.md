@@ -1,5 +1,5 @@
 
-# BATsDistribution.jl
+# BulkAndTails.jl
 
 A package implementing the "Bulk-And-Tails" (BATs) distribution along with
 maximum likelihood estimation of its parameters [1,2]. Due to the fact that
@@ -25,10 +25,10 @@ demonstration. It may be necessary to try several initializations to the
 optimization.
 
 ````{julia}
-  using Distributions, BATsDistribution
+  using Distributions, BulkAndTails
   data = rand(TDist(1.0), 5_000) # 5k samples from Cauchy distribution
-  (mle, obs_information_matrix) = fit_mle(BATs, data)
-  pdf(BATs(mle), 10.0) # compare with Cauchy pdf at 10.0.
+  (mle, obs_information_matrix) = fit_mle(BulkAndTailsDist, data)
+  pdf(mle, 10.0) # compare with Cauchy pdf at 10.0.
 ````
 
 # Future Enhancements
