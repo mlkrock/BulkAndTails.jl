@@ -3,7 +3,7 @@
 
 using StableRNGs
 const data = rand(StableRNG(123), TDist(1.0), 10_000)
-const (mle, observed_information_matrix) = fit_mle(BATs, data, print_level=0)
+const (mle, observed_information_matrix) = fit_mle(BulkAndTailsDist, data, print_level=0)
 
 @testset "Fitting" begin
   for _x in (0.1, 1.0, 10.0, 100.0, 1000.0)
