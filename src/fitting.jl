@@ -44,7 +44,7 @@ end
 
 function Distributions.fit_mle(::Type{BulkAndTailsDist}, data::AbstractArray; 
                                init=[1.0, 1.0, 0.0, 1.0, 1.0, 0.0, 2.0], 
-                               tol=1.0e-5, maxit=2000, print_level=0)
+                               tol=1.0e-5, maxit::Int=2000, print_level=0)
 
   # Box constraints (lowerb and upperb) and inequality constraints for the way
   # that I've implemented the nonlinear constraints.
@@ -105,11 +105,12 @@ function Distributions.fit_mle(::Type{BulkAndTailsDist}, data::AbstractArray;
   # Prepare the final hessian and constraint jacobian functions.
   nconstr  = length(constrf)
   constrfh = [p->ForwardDiff.hessian(cj, p) for cj in constrf]
-  ipopt_hess = (x,m,r,c,o,l,v) -> ipopt_hessian(x,m,r,c,o,l,v,hess,constrfh,nconstr)
-  ipopt_jac_constr = (x,m,r,c,v) -> ipopt_constr_jac(x,m,r,c,v,g_jac,nconstr)
+  ipopt_hess = (x,r,c,o,l,v) -> ipopt_hessian(x,r,c,o,l,v,hess,constrfh,nconstr)
+  ipopt_jac_constr = (x,r,c,v) -> ipopt_constr_jac(x,r,c,v,g_jac,nconstr)
 
   # Set up the problem:
-  prob = createProblem(length(init), # number of parameters
+  prob = CreateIpoptProblem(
+                       length(init), # number of parameters
                        lowerb, upperb, # box for parameter constraints
                        length(constrf), # number of nonlinear constraints
                        cons_low, cons_upp, # box for nonlinear constraint fxns
@@ -120,12 +121,12 @@ function Distributions.fit_mle(::Type{BulkAndTailsDist}, data::AbstractArray;
                        grad!, 
                        ipopt_jac_constr,
                        ipopt_hess)
-  addOption(prob, "sb", "yes")
-  addOption(prob, "tol", tol)
-  addOption(prob, "max_iter", Int(maxit))
-  addOption(prob, "print_level", Int(print_level))
+  AddIpoptStrOption(prob, "sb", "yes")
+  AddIpoptNumOption(prob, "tol", tol)
+  AddIpoptIntOption(prob, "max_iter", maxit)
+  AddIpoptIntOption(prob, "print_level", Int(print_level))
   prob.x = deepcopy(init)
-  status = solveProblem(prob)
+  status = IpoptSolve(prob)
 
   # If a solution was found, return it. Otherwise throw an error. 
   iszero(status) && return (BulkAndTailsDist(prob.x), Matrix(hess(prob.x)))

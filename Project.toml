@@ -13,6 +13,6 @@ Roots = "f2b01f46-fcfa-551c-844a-d8ac1e96c665"
 [compat]
 Distributions = "0.25"
 ForwardDiff = "0.10"
-Ipopt = "0.8, 0.9"
+Ipopt = "0.9"
 Roots = "1"
 julia = "1"
