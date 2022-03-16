@@ -41,9 +41,9 @@ end
 
 # Note: this t-cdf does not work with autodiff. Would need hand-coded tcdf function.
 function Distributions.cdf(d::BulkAndTailsDist, x::Real) 
-  if (x ≤ minimum(d))
+  if x ≤ minimum(d)
     return 0.0
-  elseif (x ≥ maximum(d))
+  elseif x ≥ maximum(d)
     return 1.0
   else
     (κ₀, τ₀, ϕ₀, κ₁, τ₁, ϕ₁, ν) = params(d)
@@ -51,8 +51,10 @@ function Distributions.cdf(d::BulkAndTailsDist, x::Real)
   end
 end
 
-function Distributions.quantile(d::BulkAndTailsDist, p::Real)
-  Roots.find_zero(x -> Distributions.cdf(d,x) - p, (minimum(d),maximum(d)), Roots.Bisection())
+# Roots.Bisection() is safe but relatively slow.
+# Something like Roots.Brent() is faster, but seems to fail for negative κ without lowering rtol to 0.0.
+function Distributions.quantile(d::BulkAndTailsDist, p::Real; method = Roots.Bisection(),  kwargs...)
+  Roots.find_zero(x -> Distributions.cdf(d,x) - p, (minimum(d),maximum(d)), method; kwargs...)
 end
 
 function Distributions.logpdf(d::BulkAndTailsDist, x::Real) 
@@ -69,9 +71,9 @@ end
 
 # Note: this t-cdf does not work with autodiff. Would need hand-coded logtcdf function.
 function Distributions.logcdf(d::BulkAndTailsDist, x::Real) 
-  if (x ≤ minimum(d))
+  if x ≤ minimum(d)
     return -Inf
-  elseif (x ≥ maximum(d))
+  elseif x ≥ maximum(d)
     return 0.0
   else
     (κ₀, τ₀, ϕ₀, κ₁, τ₁, ϕ₁, ν) = params(d)
@@ -79,8 +81,8 @@ function Distributions.logcdf(d::BulkAndTailsDist, x::Real)
   end
 end
 
-function Base.rand(d::BulkAndTailsDist; rng=Random.GLOBAL_RNG) 
-  quantile(d,rand(rng))
+function Base.rand(d::BulkAndTailsDist; rng=Random.GLOBAL_RNG, kwargs...) 
+  quantile(d,rand(rng); kwargs...)
 end
 
 # Define R-friendly version.
@@ -89,6 +91,7 @@ batscdf(x, parms) = Distributions.cdf(BulkAndTailsDist(parms),x)
 batsquantile(x, parms) = Distributions.quantile(BulkAndTailsDist(parms),x)
 batslogpdf(x, parms) = Distributions.logpdf(BulkAndTailsDist(parms),x)
 batslogcdf(x, parms) = Distributions.logcdf(BulkAndTailsDist(parms),x)
+batsrand(nsamples, parms) = rand(BulkAndTailsDist(parms),nsamples)
 
 # Overload for vector inputs, because R users like to not know when they are
 # broadcasting functions.

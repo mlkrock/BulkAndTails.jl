@@ -1,7 +1,7 @@
 name = "BulkAndTails"
 uuid = "6bd37c0a-d4fd-4ef6-9e65-cd3b634e9aab"
 authors = ["Mitchell Krock <mk1867@stat.rutgers.edu>"]
-version = "0.1.1"
+version = "0.1.2"
 
 [deps]
 Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"

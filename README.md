@@ -16,13 +16,13 @@ in total: shape parameters κ which control tail behavior, location parameters �
 parameters τ, and ν degrees of freedom of a student-t distribution. The subscript 0 
 refers to lower tail, and the subscript 1 refers to upper tail. If κ is negative, that tail is 
 bounded; if κ is zero (defined by continuity), that tail is thin like a Gaussian tail; and if
-κ is positive, that tail is a heavy tail.
+κ is positive, that tail is a heavy tail. See [1] for more details.
 
 # Demonstration
 
 See the example file for a more heavily commented discussion of this same
-demonstration. It may be necessary to try several initializations to the
-optimization.
+demonstration. The R_usage folder also shows a similar example script using the JuliaCall package in R. It may be necessary to try several initializations to the
+optimization (these are declared with keyword argument `init`).
 
 ````{julia}
   using Distributions, BulkAndTails
@@ -30,6 +30,15 @@ optimization.
   (mle, obs_information_matrix) = fit_mle(BulkAndTailsDist, data)
   pdf(mle, 10.0) # compare with Cauchy pdf at 10.0.
 ````
+
+# Fitting with Covariates
+
+[2] explores the idea of allowing BATs parameters to depend on covariates to produce a nonstationary BATs distribution. In particular, we allow the location and (log) scale parameters to depend upon covariates to model seasonality and climate change. We provide example Julia/R scripts for fitting daily average temperatures in Boston using this methodology. There are a few differences from the standard seven-parameter method described above:
+ - An initial guess is required here (there is no default guess).
+ - In Julia, a namedtuple of parameters is returned instead of a `BulkAndTailsDist` struct.
+ - Since the optimization is more difficult and time-consuming, the parameters are returned regardless of convergence. `status` gives the result of the optimization, with convergence indicated by zero. See the example file for a description of `status` values.
+
+Note that this parameterizes the logarithm of τ as a function of covariates to ensure positivity.
 
 # Future Enhancements
 
@@ -52,7 +61,7 @@ the code already is, this is not a priority.
 
 [1] Stein, M. L. (2021).  A parametric model for distributions with flexible behavior in both tails. Environmetrics, 32(2):Paper No. e2658, 24. (https://onlinelibrary.wiley.com/doi/abs/10.1002/env.2658)
 
-[2] Krock, M., Bessac, J., Stein, M. L., and Monahan, A. H. Nonstationary seasonal model for daily mean temperature distribution bridging bulk and tails. (https://arxiv.org/pdf/2110.10046.pdf)
+[2] Krock, M., Bessac, J., Stein, M. L., and Monahan, A. H. (2022). Nonstationary seasonal model for daily mean temperature distribution bridging bulk and tails. (https://arxiv.org/pdf/2110.10046.pdf)
 
 # Authors
 Mitchell Krock <mk1867@stat.rutgers.edu> (active development)
