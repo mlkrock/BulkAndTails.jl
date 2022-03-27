@@ -52,7 +52,7 @@ function Distributions.cdf(d::BulkAndTailsDist, x::Real)
 end
 
 # Roots.Bisection() is safe but relatively slow.
-# Something like Roots.Brent() is faster, but seems to fail for negative κ without lowering rtol to 0.0.
+# Something like Roots.Brent() is faster, but seems to fail for positive κ without lowering rtol to 0.0.
 function Distributions.quantile(d::BulkAndTailsDist, p::Real; method = Roots.Bisection(),  kwargs...)
   Roots.find_zero(x -> Distributions.cdf(d,x) - p, (minimum(d),maximum(d)), method; kwargs...)
 end
@@ -93,10 +93,6 @@ batslogpdf(x, parms) = Distributions.logpdf(BulkAndTailsDist(parms),x)
 batslogcdf(x, parms) = Distributions.logcdf(BulkAndTailsDist(parms),x)
 batsrand(nsamples, parms) = rand(BulkAndTailsDist(parms),nsamples)
 
-# Overload for vector inputs, because R users like to not know when they are
-# broadcasting functions.
-batspdf(xv::Vector, parms) = [batspdf(x, parms) for x in xv]
-batscdf(xv::Vector, parms) = [batscdf(x, parms) for x in xv]
-batsquantile(xv::Vector, parms) = [batsquantile(x, parms) for x in xv]
-batslogpdf(xv::Vector, parms) = [batslogpdf(x, parms) for x in xv]
-batslogcdf(xv::Vector, parms) = [batslogcdf(x, parms) for x in xv]
+# Automatically broadcasts to vectors except for the pdf related functions.
+batspdf(xv::Vector, parms) = Distributions.pdf.(BulkAndTailsDist(parms),xv)
+batslogpdf(xv::Vector, parms) = Distributions.logpdf.(BulkAndTailsDist(parms),xv)
