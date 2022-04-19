@@ -163,13 +163,14 @@ function bats_negloglikelihood_covariates(
   ϕ₁vec = parms[(2*nτ+3+nϕ):(2*nτ+2+2*nϕ)]
   ν = parms[2*nτ+3+2*nϕ]
 
-  output = zero(eltype(parms))
+  eltp = eltype(parms)
+  output = zero(eltp)
 
   @inbounds for i in 1:m
-    ϕ₀ = zero(eltype(parms))
-    ϕ₁ = zero(eltype(parms))
-    logτ₀ = zero(eltype(parms))
-    logτ₁ = zero(eltype(parms))
+    ϕ₀ = zero(eltp)
+    ϕ₁ = zero(eltp)
+    logτ₀ = zero(eltp)
+    logτ₁ = zero(eltp)
 
     @inbounds for j in 1:nϕ
       ϕ₀ += ϕ₀vec[j] * ϕmatrix[i, j]
@@ -181,7 +182,7 @@ function bats_negloglikelihood_covariates(
       logτ₁ += τ₁vec[j] * τmatrix[i, j]
     end
     
-      output -= logpdf(BulkAndTailsDist(κ₀,exp(logτ₀),ϕ₀,κ₁,exp(logτ₁),ϕ₁,ν),data[i])
+    output -= logpdf(BulkAndTailsDist(κ₀,exp(logτ₀),ϕ₀,κ₁,exp(logτ₁),ϕ₁,ν),data[i])
   end
 
   return output
@@ -222,10 +223,10 @@ function fit_bats_mle_covariates(data::AbstractArray, τmatrix::AbstractArray, �
   nϕ = size(ϕmatrix,2)
   nτ = size(τmatrix,2)
   lenparms = length(init)
-  constr1_covariate = function(p, lenparms) #(i)
+  function constr1_covariate(p, lenparms) #(i)
     p[1]/p[lenparms]
   end
-  constr2_covariate = function(p, nτ, nϕ, lenparms) #(i)
+  function constr2_covariate(p, nτ, nϕ, lenparms) #(i)
     p[2+nτ+nϕ]/p[lenparms]
   end
   _constr1(p) = constr1_covariate(p, lenparms) # (i)

@@ -88,11 +88,12 @@ end
 # Define R-friendly version.
 batspdf(x, parms) = Distributions.pdf(BulkAndTailsDist(parms),x)
 batscdf(x, parms) = Distributions.cdf(BulkAndTailsDist(parms),x)
-batsquantile(x, parms) = Distributions.quantile(BulkAndTailsDist(parms),x)
+batsquantile(x, parms; kwargs...) = Distributions.quantile(BulkAndTailsDist(parms),x; kwargs...)
 batslogpdf(x, parms) = Distributions.logpdf(BulkAndTailsDist(parms),x)
 batslogcdf(x, parms) = Distributions.logcdf(BulkAndTailsDist(parms),x)
 batsrand(nsamples, parms) = rand(BulkAndTailsDist(parms),nsamples)
 
-# Automatically broadcasts to vectors except for the pdf related functions.
+# Automatically broadcasts to vectors except for the pdf related functions and the quantile with kwargs.
 batspdf(xv::Vector, parms) = Distributions.pdf.(BulkAndTailsDist(parms),xv)
 batslogpdf(xv::Vector, parms) = Distributions.logpdf.(BulkAndTailsDist(parms),xv)
+batsquantile(xv::Vector, parms; kwargs...) = Distributions.quantile.(BulkAndTailsDist(parms),xv; kwargs...)
