@@ -13,11 +13,14 @@ iΨ(x) = (x < 25.0) ? log(max(0.0, expm1(x))) : x # avoids an error with log of 
 # One half of the H function, and the extension relevant for the density.
 # Trying to be careful here about numerics, but it is kind of fishy as κ->0.
 function H_part(x, κ, τ, ϕ)
-  if isapprox(κ, 0.0, atol = 1.0e-8) # cutoff chosen by eye.
-      a = Ψ((x - ϕ) / τ)
-      return exp(a) - 0.5 * (a^2) * exp(a) * κ
+  if iszero(κ)
+    return exp(Ψ((x - ϕ) / τ))
+  elseif isapprox(κ, 0.0, atol = 1.0e-8) # cutoff chosen by eye.
+    a = Ψ((x - ϕ) / τ)
+    return exp(a) - 0.5 * (a^2) * exp(a) * κ
+  else
+    return (1.0 + κ * Ψ((x - ϕ) / τ))^(1.0 / κ)
   end
-  (1.0 + κ * Ψ((x - ϕ) / τ))^(1.0 / κ)
 end
 
 H(x, κ₀, τ₀, ϕ₀, κ₁, τ₁, ϕ₁) = H_part(x, κ₁, τ₁, ϕ₁) - H_part(-x, κ₀, τ₀, -ϕ₀)

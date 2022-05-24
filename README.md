@@ -38,7 +38,7 @@ optimization (these are declared with keyword argument `init`).
  - In Julia, a namedtuple of parameters is returned instead of a `BulkAndTailsDist` struct.
  - Since the optimization is more difficult and time-consuming, the parameters are returned regardless of convergence. `status` gives the result of the optimization, with convergence indicated by zero. See the example file for a description of `status` values.
 
-Note that this parameterizes the logarithm of τ as a function of covariates to ensure positivity.
+Note that this parameterizes the logarithm of τ as a function of covariates to ensure positivity. Also note that the observations are treated as independent in the likelihood during the optimization.
 
 # Future Enhancements
 
@@ -59,9 +59,9 @@ the code already is, this is not a priority.
 
 # References
 
-[1] Stein, M. L. (2021).  A parametric model for distributions with flexible behavior in both tails. Environmetrics, 32(2):Paper No. e2658, 24. (https://onlinelibrary.wiley.com/doi/abs/10.1002/env.2658)
+[1] Stein, M. L. (2021) A parametric model for distributions with flexible behavior in both tails. Environmetrics, 32(2):Paper No. e2658, 24. (https://onlinelibrary.wiley.com/doi/abs/10.1002/env.2658)
 
-[2] Krock, M., Bessac, J., Stein, M. L., and Monahan, A. H. (2022). Nonstationary seasonal model for daily mean temperature distribution bridging bulk and tails. (https://arxiv.org/pdf/2110.10046.pdf)
+[2] Krock, M., Bessac, J., Stein, M. L. and Monahan, A. H. (2022) Nonstationary seasonal model for daily mean temperature distribution bridging bulk and tails. Weather and Climate Extremes, 36, 100438. URL: https://www.sciencedirect.com/science/article/pii/S2212094722000251.
 
 # Authors
 Mitchell Krock <mk1867@stat.rutgers.edu> (active development)
